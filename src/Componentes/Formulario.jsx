@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import generarPDF from "../Servicios/generarPDF";
@@ -12,9 +11,23 @@ function Formulario() {
     firmaRef.current.clear();
   };
 
+  const soloNumeros = (e) => {
+    e.target.value = e.target.value.replace(/\D/g, "");
+  };
+
   const manejarGenerarPDF = () => {
 
     const formulario = document.querySelector("form");
+
+    if (!formulario.checkValidity()) {
+      formulario.reportValidity();
+      return;
+    }
+
+    if (firmaRef.current.isEmpty()) {
+      alert("Debe agregar una firma.");
+      return;
+    }
 
     const formData = new FormData(formulario);
 
@@ -25,28 +38,25 @@ function Formulario() {
     generarPDF(datos, firmaRef);
   };
 
-
   return (
     <>
       <h1>Contrato</h1>
 
       <form>
+
         <h2>Datos personales</h2>
 
-        <label>
-          Nombre completo:
+        <label> Nombre completo:
           <input
             type="text"
             name="nombre"
+            required
           />
         </label>
 
-        <label>
-          Tipo de documento:
-          <select name="tipoDocumento">
-            <option value="">
-              Seleccione
-            </option>
+        <label> Tipo de documento:
+          <select name="tipoDocumento" required>
+            <option value=""> Seleccione </option>
 
             <option value="CC">
               Cédula de ciudadanía
@@ -62,39 +72,41 @@ function Formulario() {
           </select>
         </label>
 
-        <label>
-          Número de documento:
+        <label> Número de documento:
           <input
             type="text"
             name="documento"
+            required
+            inputMode="numeric"
+            maxLength="15"
+            onInput={soloNumeros}
           />
         </label>
 
-        <label>
-          Teléfono:
+        <label> Teléfono:
           <input
             type="tel"
             name="telefono"
+            required
+            inputMode="numeric"
+            maxLength="10"
+            onInput={soloNumeros}
           />
         </label>
 
-        <label>
-          Correo electrónico:
+        <label> Correo electrónico:
           <input
             type="email"
             name="correo"
+            required
           />
         </label>
 
 
-        {/* DATOS DEL CONTRATO */}
-
         <h2>Datos del contrato</h2>
 
-        <label>
-          Tipo de contrato:
-
-          <select name="tipoContrato">
+        <label> Tipo de contrato:
+        <select name="tipoContrato" required>
 
             <option value="">
               Seleccione
@@ -111,56 +123,52 @@ function Formulario() {
             <option value="Contrato de aprendizaje">
               Contrato de aprendizaje
             </option>
-
-            
-
           </select>
         </label>
 
-        <label>
-          Cargo:
+        <label> Cargo:
           <input
             type="text"
             name="cargo"
+            required
           />
         </label>
 
-        <label>
-          Área:
+        <label> Área:
           <input
             type="text"
             name="area"
+            required
           />
         </label>
 
-        <label>
-          Fecha de inicio:
+        <label> Fecha de inicio:
           <input
             type="date"
             name="fechaInicio"
+            required
           />
         </label>
 
-        <label>
-          Fecha de terminación:
+        <label> Fecha de terminación:
           <input
             type="date"
             name="fechaTerminacion"
+            required
           />
         </label>
 
-        <label>
-          Salario / Valor del contrato:
+        <label> Salario / Valor del contrato:
           <input
             type="number"
             name="salario"
+            required
+            min="0"
           />
         </label>
 
-        <label>
-          Forma de pago:
-
-          <select name="formaPago">
+        <label> Forma de pago:
+          <select name="formaPago" required>
 
             <option value="">
               Seleccione
@@ -181,127 +189,116 @@ function Formulario() {
           </select>
         </label>
 
-     
-
-        {/* DATOS DE LA EMPRESA */}
-
         <h2>Datos de la empresa</h2>
 
-        <label>
-          Nombre de la empresa:
+        <label> Nombre de la empresa:
           <input
             type="text"
             name="empresa"
+            required
           />
         </label>
 
-        <label>
-          NIT:
+        <label> NIT:
           <input
             type="text"
             name="nit"
+            required
+            inputMode="numeric"
+            maxLength="15"
+            onInput={soloNumeros}
           />
         </label>
 
-        <label>
-          Representante legal:
+        <label> Representante legal:
           <input
             type="text"
             name="representante"
+            required
           />
         </label>
 
-        <label>
-          Documento del representante:
+        <label> Documento del representante:
           <input
             type="text"
             name="documentoRepresentante"
+            required
+            inputMode="numeric"
+            maxLength="15"
+            onInput={soloNumeros}
           />
         </label>
 
-        <label>
-          Cargo del representante:
+        <label>Cargo del representante:
           <input
             type="text"
             name="cargoRepresentante"
+            required
           />
         </label>
 
-        <label>
-          Dirección de la empresa:
+        <label>Dirección de la empresa:
           <input
             type="text"
             name="direccionEmpresa"
+            required
           />
         </label>
 
-        <label>
-          Teléfono de la empresa:
+        <label> Teléfono de la empresa:
           <input
             type="tel"
             name="telefonoEmpresa"
+            required
+            inputMode="numeric"
+            maxLength="10"
+            onInput={soloNumeros}
           />
         </label>
 
-        <label>
-          Correo de la empresa:
+        <label> Correo de la empresa:
           <input
             type="email"
             name="correoEmpresa"
+            required
           />
         </label>
 
-
-        {/* INFORMACIÓN ADICIONAL */}
 
         <h2>Información adicional</h2>
 
-        <label>
-          Objeto del contrato:
-
+        <label> Objeto del contrato:
           <textarea
             name="objetoContrato"
+            required
           ></textarea>
-
         </label>
 
-        <label>
-          Obligaciones:
-
+        <label> Obligaciones:
           <textarea
             name="obligaciones"
+            required
           ></textarea>
-
         </label>
 
-        <label>
-          Observaciones:
-
+        <label> Observaciones:
           <textarea
             name="observaciones"
           ></textarea>
-
         </label>
 
-        <label>
-          Fecha de elaboración:
-
+        <label> Fecha de elaboración:
           <input
             type="date"
             name="fechaElaboracion"
+            required
           />
-
         </label>
-
-
-        {/* FIRMA */}
 
         <h2>Firma</h2>
 
-        <p>
-          Firme dentro del recuadro:
-        </p>
-
+        <p> Firme dentro del recuadro: </p>
+       
         <div className="firma-container">
 
           <SignatureCanvas
@@ -323,13 +320,6 @@ function Formulario() {
           Limpiar firma
         </button>
 
-
-        <br />
-        <br />
-
-
-        {/* GENERAR PDF */}
-
         <button
           type="button"
           onClick={manejarGenerarPDF}
@@ -343,4 +333,3 @@ function Formulario() {
 }
 
 export default Formulario;
-

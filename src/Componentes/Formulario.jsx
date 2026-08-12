@@ -1,16 +1,11 @@
-import React, { useRef, useState } from "react";
 import SignatureCanvas from "react-signature-canvas";
-
+import React, { useRef } from "react";
 import generarPDF from "../Servicios/generarPDF";
 
 import "../Style/Formulario.css";
 
 
 function Formulario() {
-
-  const [pregunta, setPregunta] = useState("");
-  const [respuesta, setRespuesta] = useState("");
-  const [cargando, setCargando] = useState(false);
 
   const firmaRef = useRef(null);
 
@@ -47,75 +42,6 @@ function Formulario() {
 
     generarPDF(datos, firmaRef);
   };
-
-
-  const consultarAgente = async () => {
-
-    const formulario = document.querySelector("form");
-
-    const formData = new FormData(formulario);
-
-    const datos = Object.fromEntries(
-      formData.entries()
-    );
-
-
-    if (!pregunta.trim()) {
-      alert("Escribe una pregunta.");
-      return;
-    }
-
-
-    try {
-
-      setCargando(true);
-      setRespuesta("");
-
-
-      const response = await fetch(
-        "http://localhost:3000/api/agente",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            ...datos,
-            pregunta
-          })
-        }
-      );
-
-
-      const data = await response.json();
-
-
-      if (!response.ok) {
-        throw new Error(data.error);
-      }
-
-
-      setRespuesta(data.respuesta);
-
-
-    } catch (error) {
-
-      console.error("Error:", error);
-
-      setRespuesta(
-        "No fue posible consultar el agente."
-      );
-
-
-    } finally {
-
-      setCargando(false);
-
-    }
-  };
-
 
   return (
     <>
@@ -533,52 +459,6 @@ function Formulario() {
         >
           Generar PDF
         </button>
-
-
-
-        {/* ASISTENTE */}
-
-        <h2>Asistente del contrato</h2>
-
-
-        <textarea
-          placeholder="Escribe tu pregunta sobre el contrato..."
-          value={pregunta}
-          onChange={(e) => setPregunta(e.target.value)}
-        />
-
-
-        <button
-          type="button"
-          onClick={consultarAgente}
-          disabled={cargando}
-        >
-
-          {cargando
-            ? "Consultando..."
-            : "Consultar agente"
-          }
-
-        </button>
-
-
-        {respuesta && (
-
-          <div className="respuesta-agente">
-
-            <h3>
-              Respuesta
-            </h3>
-
-            <p>
-              {respuesta}
-            </p>
-
-          </div>
-
-        )}
-
-
       </form>
 
     </>

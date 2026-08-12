@@ -142,7 +142,7 @@ const generarPDF = (datos, firmaRef) => {
   pdf.setFontSize(20);
 
   pdf.text(
-    "FORMULARIO DE CONTRATO",
+    "CONTRATO",
     anchoPagina / 2,
     15,
     {
@@ -152,15 +152,6 @@ const generarPDF = (datos, firmaRef) => {
 
   pdf.setFont("helvetica", "normal");
   pdf.setFontSize(9);
-
-  pdf.text(
-    "Documento de información contractual",
-    anchoPagina / 2,
-    24,
-    {
-      align: "center"
-    }
-  );
 
   pdf.setTextColor(0, 0, 0);
 

@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api":"node Api/Agente.js"
+    "api": "node Api/Agente.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.116.0",
@@ -17,6 +17,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-signature-canvas": "^1.1.0-alpha.2"

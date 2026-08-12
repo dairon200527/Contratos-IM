@@ -1,24 +1,21 @@
-import SignatureCanvas from "react-signature-canvas";
 import React, { useRef } from "react";
+import SignatureCanvas from "react-signature-canvas";
+
 import generarPDF from "../Servicios/generarPDF";
 
 import "../Style/Formulario.css";
-
 
 function Formulario() {
 
   const firmaRef = useRef(null);
 
-
   const limpiarFirma = () => {
     firmaRef.current.clear();
   };
 
-
   const soloNumeros = (e) => {
     e.target.value = e.target.value.replace(/\D/g, "");
   };
-
 
   const manejarGenerarPDF = () => {
 
@@ -48,59 +45,27 @@ function Formulario() {
 
       <h1>Contrato</h1>
 
-
       <form>
 
-        <h2>Datos personales</h2>
-
+        <h2>Datos del creador</h2>
 
         <label>
-          Nombre completo:
+          Nombre y apellidos:
 
           <input
             type="text"
-            name="nombre"
+            name="nombreCompleto"
             required
           />
 
         </label>
 
-
         <label>
-          Tipo de documento:
-
-          <select
-            name="tipoDocumento"
-            required
-          >
-
-            <option value="">
-              Seleccione
-            </option>
-
-            <option value="CC">
-              Cédula de ciudadanía
-            </option>
-
-            <option value="CE">
-              Cédula de extranjería
-            </option>
-
-            <option value="TI">
-              Tarjeta de identidad
-            </option>
-
-          </select>
-
-        </label>
-
-
-        <label>
-          Número de documento:
+          Documento de identidad:
 
           <input
             type="text"
-            name="documento"
+            name="documentoIdentidad"
             required
             inputMode="numeric"
             maxLength="15"
@@ -109,43 +74,11 @@ function Formulario() {
 
         </label>
 
-
         <label>
-          Teléfono:
-
-          <input
-            type="tel"
-            name="telefono"
-            required
-            inputMode="numeric"
-            maxLength="10"
-            onInput={soloNumeros}
-          />
-
-        </label>
-
-
-        <label>
-          Correo electrónico:
-
-          <input
-            type="email"
-            name="correo"
-            required
-          />
-
-        </label>
-
-
-
-        <h2>Datos del contrato</h2>
-
-
-        <label>
-          Tipo de contrato:
+          Persona natural o jurídica:
 
           <select
-            name="tipoContrato"
+            name="tipoPersona"
             required
           >
 
@@ -153,89 +86,81 @@ function Formulario() {
               Seleccione
             </option>
 
-            <option value="Contrato laboral">
-              Contrato laboral
+            <option value="Persona Natural">
+              Persona natural
             </option>
 
-            <option value="Prestación de servicios">
-              Prestación de servicios
-            </option>
-
-            <option value="Contrato de aprendizaje">
-              Contrato de aprendizaje
+            <option value="Persona Jurídica">
+              Persona jurídica
             </option>
 
           </select>
 
         </label>
 
-
         <label>
-          Cargo:
+          Cuenta de Instagram o TikTok:
 
           <input
             type="text"
-            name="cargo"
+            name="redSocial"
             required
           />
 
         </label>
 
 
+
+        <h2>Información de la campaña</h2>
+
         <label>
-          Área:
+          Campaña:
 
           <input
             type="text"
-            name="area"
+            name="campana"
             required
           />
 
         </label>
 
-
         <label>
-          Fecha de inicio:
+          Marca de la campaña:
 
           <input
-            type="date"
-            name="fechaInicio"
+            type="text"
+            name="marcaCampana"
             required
           />
 
         </label>
 
+        <label>
+          Acciones negociadas:
+
+          <textarea
+            name="accionesNegociadas"
+            required
+          ></textarea>
+
+        </label>
 
         <label>
-          Fecha de terminación:
+          Plazo de pago:
 
           <input
-            type="date"
-            name="fechaTerminacion"
+            type="text"
+            name="plazoPago"
             required
           />
 
         </label>
 
-
         <label>
-          Salario / Valor del contrato:
-
-          <input
-            type="number"
-            name="salario"
-            required
-            min="0"
-          />
-
-        </label>
-
-
-        <label>
-          Forma de pago:
+          Moneda:
 
           <select
-            name="formaPago"
+            name="moneda"
             required
           >
 
@@ -243,65 +168,67 @@ function Formulario() {
               Seleccione
             </option>
 
-            <option value="Mensual">
-              Mensual
+            <option value="COP">
+              COP
             </option>
 
-            <option value="Quincenal">
-              Quincenal
+            <option value="USD">
+              USD
             </option>
 
-            <option value="Pago único">
-              Pago único
+            <option value="EUR">
+              EUR
             </option>
 
           </select>
 
         </label>
 
-
-
-        <h2>Datos de la empresa</h2>
-
-
         <label>
-          Nombre de la empresa:
+          Duración de campaña:
 
           <input
             type="text"
-            name="empresa"
+            name="duracionCampana"
             required
           />
 
         </label>
 
-
         <label>
-          NIT:
+          Tipo:
 
-          <input
-            type="text"
-            name="nit"
+          <select
+            name="tipoParticipante"
             required
-            inputMode="numeric"
-            maxLength="15"
-            onInput={soloNumeros}
-          />
+          >
+
+            <option value="">
+              Seleccione
+            </option>
+
+            <option value="Talento">
+              Talento
+            </option>
+
+            <option value="Agencia">
+              Agencia
+            </option>
+
+          </select>
 
         </label>
-
 
         <label>
           Representante legal:
 
           <input
             type="text"
-            name="representante"
+            name="representanteLegal"
             required
           />
 
         </label>
-
 
         <label>
           Documento del representante:
@@ -318,132 +245,26 @@ function Formulario() {
         </label>
 
 
-        <label>
-          Cargo del representante:
-
-          <input
-            type="text"
-            name="cargoRepresentante"
-            required
-          />
-
-        </label>
-
-
-        <label>
-          Dirección de la empresa:
-
-          <input
-            type="text"
-            name="direccionEmpresa"
-            required
-          />
-
-        </label>
-
-
-        <label>
-          Teléfono de la empresa:
-
-          <input
-            type="tel"
-            name="telefonoEmpresa"
-            required
-            inputMode="numeric"
-            maxLength="10"
-            onInput={soloNumeros}
-          />
-
-        </label>
-
-
-        <label>
-          Correo de la empresa:
-
-          <input
-            type="email"
-            name="correoEmpresa"
-            required
-          />
-
-        </label>
-
-
-
-        <h2>Información adicional</h2>
-
-
-        <label>
-          Objeto del contrato:
-
-          <textarea
-            name="objetoContrato"
-            required
-          ></textarea>
-
-        </label>
-
-
-        <label>
-          Obligaciones:
-
-          <textarea
-            name="obligaciones"
-            required
-          ></textarea>
-
-        </label>
-
-
-        <label>
-          Observaciones:
-
-          <textarea
-            name="observaciones"
-          ></textarea>
-
-        </label>
-
-
-        <label>
-          Fecha de elaboración:
-
-          <input
-            type="date"
-            name="fechaElaboracion"
-            required
-          />
-
-        </label>
-
-
 
         <h2>Firma</h2>
-
 
         <p>
           Firme dentro del recuadro:
         </p>
 
-
         <div className="firma-container">
 
           <SignatureCanvas
-
             ref={firmaRef}
-
             penColor="black"
-
             canvasProps={{
               width: 500,
               height: 200,
               className: "firma"
             }}
-
           />
 
         </div>
-
 
         <button
           type="button"
@@ -452,18 +273,17 @@ function Formulario() {
           Limpiar firma
         </button>
 
-
         <button
           type="button"
           onClick={manejarGenerarPDF}
         >
           Generar PDF
         </button>
+
       </form>
 
     </>
   );
 }
-
 
 export default Formulario;

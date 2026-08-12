@@ -2,104 +2,58 @@ import jsPDF from "jspdf";
 
 const generarPDF = (datos, firmaRef) => {
 
-  const pdf = new jsPDF();
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const ancho = pdf.internal.pageSize.getWidth();
+  const alto = pdf.internal.pageSize.getHeight();
 
   const margen = 20;
-  const margenInferior = 22;
-  const anchoPagina = pdf.internal.pageSize.getWidth();
-  const altoPagina = pdf.internal.pageSize.getHeight();
-  const alturaUtil = altoPagina - margenInferior;
 
-  const tituloSeccion = (titulo, y) => {
+  let y = 25;
 
-    pdf.setFillColor(40, 40, 40);
+  const verificarSalto = (espacio = 20) => {
+    if (y + espacio > alto - 25) {
+      pdf.addPage();
+      y = 25;
+    }
+  };
 
-    pdf.roundedRect(
+  const titulo = (texto) => {
+
+    verificarSalto(15);
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(12);
+
+    pdf.text(
+      texto,
       margen,
-      y,
-      anchoPagina - margen * 2,
-      9,
-      2,
-      2,
-      "F"
+      y
     );
 
-    pdf.setTextColor(255, 255, 255);
+    y += 8;
+  };
+
+  const parrafo = (texto) => {
+
+    verificarSalto(25);
+
+    pdf.setFont("helvetica", "normal");
     pdf.setFontSize(10);
-    pdf.setFont("helvetica", "bold");
-
-    pdf.text(
-      titulo,
-      margen + 5,
-      y + 6
-    );
-
-    pdf.setTextColor(0, 0, 0);
-    pdf.setFont("helvetica", "normal");
-
-    return y + 15;
-  };
-
-
-  const texto = (
-    label, valor, x, y, ancho = 80
-  ) => {
-
-    pdf.setFontSize(8.5);
-    pdf.setFont("helvetica", "bold");
-
-    pdf.text(
-      label,
-      x,
-      y
-    );
-
-    pdf.setFont("helvetica", "normal");
 
     const lineas = pdf.splitTextToSize(
-      valor || "No especificado",
-      ancho
+      texto,
+      ancho - (margen * 2)
     );
 
     pdf.text(
       lineas,
-      x,
-      y + 4
-    );
-
-    return y + 4 + (lineas.length * 3.5);
-  };
-
-
-  const textoLargo = (
-    label, valor, x, y
-  ) => {
-
-    pdf.setFontSize(8.5);
-    pdf.setFont("helvetica", "bold");
-
-    pdf.text(
-      label,
-      x,
+      margen,
       y
     );
 
-    pdf.setFont("helvetica", "normal");
-
-    const lineas = pdf.splitTextToSize(
-      valor || "No especificado",
-      anchoPagina - margen * 2
-    );
-
-    pdf.text(
-      lineas,
-      x,
-      y + 5
-    );
-
-    return y + 7 + (lineas.length * 3.5);
+    y += (lineas.length * 5) + 4;
   };
-
 
   const piePagina = () => {
 
@@ -110,260 +64,213 @@ const generarPDF = (datos, firmaRef) => {
       pdf.setPage(i);
 
       pdf.setFontSize(8);
-      pdf.setTextColor(120, 120, 120);
 
       pdf.text(
-        `Documento generado electrónicamente - Página ${i} de ${paginas}`,
-        anchoPagina / 2,
-        altoPagina - 10,
+        `Página ${i} de ${paginas}`,
+        ancho / 2,
+        alto - 10,
         {
           align: "center"
         }
       );
-
-      pdf.setTextColor(0, 0, 0);
     }
   };
 
-
   // ENCABEZADO
 
-  pdf.setFillColor(30, 30, 30);
-
-  pdf.rect(
-    0, 0,
-    anchoPagina, 35,
-    "F"
-  );
-
-  pdf.setTextColor(255, 255, 255);
-
   pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(20);
+  pdf.setFontSize(16);
 
   pdf.text(
-    "CONTRATO",
-    anchoPagina / 2,
-    15,
+    "CONTRATO DE PRESTACIÓN DE SERVICIOS",
+    ancho / 2,
+    y,
     {
       align: "center"
     }
   );
 
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(9);
+  y += 15;
 
-  pdf.setTextColor(0, 0, 0);
-
-
-  // DATOS PERSONALES
-
-  let y = 48;
-
-  y = tituloSeccion(
-    "DATOS PERSONALES",
-    y
+  parrafo(
+    `Entre LOOP y ${datos.nombreCompleto}, identificado(a) con documento de identidad No. ${datos.documentoIdentidad}, actuando como ${datos.tipoPersona}, titular de la cuenta ${datos.redSocial}, se celebra el presente contrato de prestación de servicios para la ejecución de campañas publicitarias y creación de contenido digital.`
   );
 
-  texto("Nombre completo:", datos.nombre, 20, y, 75);
-  texto("Documento:", `${datos.tipoDocumento} ${datos.documento}`, 110, y, 75);
-  y += 16;
+  titulo("PRIMERA. OBJETO");
 
-  texto("Teléfono:", datos.telefono, 20, y, 75);
-  texto("Correo electrónico:", datos.correo, 110, y, 75);
-  y += 16;
-
-  texto("Dirección:", datos.direccion, 20, y, 75);
-  texto("Ciudad:", datos.ciudad, 110, y, 75);
-  y += 16;
-
-  texto("Departamento:", datos.departamento, 20, y, 75);
-
-
-  // DATOS DEL CONTRATO
-
-  y += 18;
-
-  y = tituloSeccion(
-    "DATOS DEL CONTRATO",
-    y
+  parrafo(
+    `El contratista participará en la campaña "${datos.campana}" correspondiente a la marca "${datos.marcaCampana}", ejecutando las acciones negociadas descritas en el presente documento.`
   );
 
-  texto("Tipo de contrato:", datos.tipoContrato, 20, y, 75);
-  texto("Cargo:", datos.cargo, 110, y, 75);
-  y += 16;
+  titulo("SEGUNDA. ACCIONES NEGOCIADAS");
 
-  texto("Área:", datos.area, 20, y, 75);
-  texto("Salario / Valor:", datos.salario, 110, y, 75);
-  y += 16;
-
-  texto("Fecha de inicio:", datos.fechaInicio, 20, y, 75);
-  texto("Fecha de terminación:", datos.fechaTerminacion, 110, y, 75);
-  y += 16;
-
-  texto("Forma de pago:", datos.formaPago, 20, y, 75);
-
-
-  // DATOS DE LA EMPRESA
-
-  y += 18;
-
-  y = tituloSeccion(
-    "DATOS DE LA EMPRESA",
-    y
+  parrafo(
+    datos.accionesNegociadas || "No especificadas."
   );
 
-  texto("Empresa:", datos.empresa, 20, y, 75);
-  texto("NIT:", datos.nit, 110, y, 75);
-  y += 16;
+  titulo("TERCERA. DURACIÓN");
 
-  texto("Representante legal:", datos.representante, 20, y, 75);
-  texto("Documento:", datos.documentoRepresentante, 110, y, 75);
-  y += 16;
-
-  texto("Cargo representante:", datos.cargoRepresentante, 20, y, 75);
-  texto("Teléfono:", datos.telefonoEmpresa, 110, y, 75);
-  y += 16;
-
-  texto("Dirección:", datos.direccionEmpresa, 20, y, 75);
-  texto("Correo:", datos.correoEmpresa, 110, y, 75);
-
-
-  // SEGUNDA PÁGINA
-
-  pdf.addPage();
-
-  y = 25;
-
-  y = tituloSeccion(
-    "INFORMACIÓN ADICIONAL",
-    y
+  parrafo(
+    `La duración acordada para la campaña será de ${datos.duracionCampana}.`
   );
 
-  y = textoLargo(
-    "Objeto del contrato:",
-    datos.objetoContrato,
-    margen,
-    y
+  titulo("CUARTA. PLAZO DE PAGO");
+
+  parrafo(
+    `El pago correspondiente será realizado dentro del plazo de ${datos.plazoPago}.`
   );
 
-  y += 8;
+  titulo("QUINTA. MONEDA");
 
-  y = textoLargo(
-    "Obligaciones:",
-    datos.obligaciones,
-    margen,
-    y
+  parrafo(
+    `La remuneración pactada será cancelada en ${datos.moneda}.`
   );
 
-  y += 8;
+  titulo("SEXTA. OBLIGACIONES DEL TALENTO");
 
-  y = textoLargo(
-    "Observaciones:",
-    datos.observaciones,
-    margen,
-    y
+  parrafo(
+    `El contratista se compromete a desarrollar las actividades pactadas, respetar los lineamientos de la campaña, cumplir los tiempos de entrega y mantener una conducta profesional durante toda la ejecución del proyecto.`
   );
 
+  titulo("SÉPTIMA. OBLIGACIONES DE LOOP");
 
-  // FECHA
+  parrafo(
+    `LOOP suministrará la información necesaria para la ejecución de la campaña y realizará los pagos conforme a las condiciones pactadas.`
+  );
 
-  y += 12;
+  titulo("OCTAVA. CONFIDENCIALIDAD");
+
+  parrafo(
+    `Toda la información relacionada con la campaña, la marca y los acuerdos comerciales tendrá carácter confidencial.`
+  );
+
+  titulo("NOVENA. PROPIEDAD INTELECTUAL");
+
+  parrafo(
+    `El contenido generado en desarrollo de la campaña podrá ser utilizado conforme a los acuerdos comerciales establecidos entre las partes.`
+  );
+
+  if (datos.tipoParticipante === "Agencia") {
+
+    titulo("REPRESENTACIÓN LEGAL");
+
+    parrafo(
+      `La participación se realiza a través de una agencia representada legalmente por ${datos.representanteLegal}, identificado(a) con documento No. ${datos.documentoRepresentante}.`
+    );
+  }
+
+  titulo("ACEPTACIÓN");
+
+  parrafo(
+    `Las partes manifiestan haber leído, comprendido y aceptado todas las condiciones establecidas en el presente contrato.`
+  );
+
+  // FIRMAS
+
+  verificarSalto(80);
+
+  y += 10;
 
   pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(8.5);
-
   pdf.text(
-    "Fecha de elaboración:",
+    "FIRMAS",
     margen,
     y
   );
 
-  pdf.setFont("helvetica", "normal");
+  y += 15;
 
-  pdf.text(
-    datos.fechaElaboracion || "No especificada",
-    margen + 40,
-    y
-  );
-
-
-  // FIRMA
-
-  y += 20;
-
-  y = tituloSeccion(
-    "FIRMA",
-    y
-  );
-
-  pdf.setFontSize(8.5);
-
-  pdf.text(
-    "Firma del contratista:",
-    margen,
-    y
-  );
-
-  y += 7;
-
-  pdf.setDrawColor(150, 150, 150);
+  // Firma talento
 
   pdf.rect(
     margen,
     y,
-    90,
-    40
+    80,
+    35
   );
 
   if (
     firmaRef &&
+    firmaRef.current &&
     !firmaRef.current.isEmpty()
   ) {
 
-    const imagenFirma =
-      firmaRef.current.toDataURL("image/png");
+    const firma = firmaRef.current.toDataURL(
+      "image/png"
+    );
 
     pdf.addImage(
-      imagenFirma,
+      firma,
       "PNG",
-      margen + 5,
+      margen + 3,
       y + 3,
-      80,
-      34
+      74,
+      25
     );
   }
 
-  pdf.setDrawColor(0, 0, 0);
-
   pdf.line(
     margen,
-    y + 47,
-    margen + 90,
-    y + 47
+    y + 42,
+    margen + 80,
+    y + 42
   );
 
-  pdf.setFontSize(8);
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(9);
 
   pdf.text(
-    datos.nombre || "Contratista",
-    margen + 45,
+    datos.nombreCompleto,
+    margen + 40,
+    y + 48,
+    {
+      align: "center"
+    }
+  );
+
+  pdf.text(
+    datos.documentoIdentidad,
+    margen + 40,
     y + 53,
     {
       align: "center"
     }
   );
 
+  // Firma LOOP
 
-  // PIE DE PÁGINA
+  const xLoop = 115;
+
+  pdf.line(
+    xLoop,
+    y + 42,
+    xLoop + 60,
+    y + 42
+  );
+
+  pdf.text(
+    "LOOP",
+    xLoop + 30,
+    y + 48,
+    {
+      align: "center"
+    }
+  );
+
+  pdf.text(
+    "Representante autorizado",
+    xLoop + 30,
+    y + 53,
+    {
+      align: "center"
+    }
+  );
 
   piePagina();
 
-
-  // DESCARGAR PDF
-
-  pdf.save("contrato.pdf");
+  pdf.save(
+    `Contrato_${datos.nombreCompleto}.pdf`
+  );
 };
 
 export default generarPDF;
-

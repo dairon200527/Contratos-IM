@@ -82,7 +82,7 @@ const generarPDF = (datos, firmaRef) => {
   pdf.setFontSize(16);
 
   pdf.text(
-    "CONTRATO DE PRESTACIÓN DE SERVICIOS",
+    "CONTRATO DE PRESTACIÓN DE SERVICIOS SUSCRITO ENTRE INTERACTIVE MEDIA S.A.S. Y",
     ancho / 2,
     y,
     {
@@ -99,7 +99,7 @@ const generarPDF = (datos, firmaRef) => {
   titulo("PRIMERA. OBJETO");
 
   parrafo(
-    `El contratista participará en la campaña "${datos.campana}" correspondiente a la marca "${datos.marcaCampana}", ejecutando las acciones negociadas descritas en el presente documento.`
+    `El Influenciador se obliga a crear y publicar para la campaña [NOMBRE DE LA CAMPAÑA] los siguientes CONTENIDOS: [X] publicación(es) tipo Reel en Instagram, [X] video(s) en TikTok, [X] publicación(es) tipo Post/Carrusel en Instagram, [X] historia(s) en Instagram y/o [DESCRIBIR CUALQUIER OTRO FORMATO], mencionando las cuentas oficiales de [@CLIENTE] y cumpliendo con los lineamientos establecidos en el Brief de la campaña. Todos los CONTENIDOS deberán ser creados y publicados por el Influenciador en ejecución del presente Contrato y de acuerdo con las indicaciones del Contratante. (los “CONTENIDOS”).  "${datos.campana}" correspondiente a la marca "${datos.marcaCampana}", ejecutando las acciones negociadas descritas en el presente documento.`
   );
 
   titulo("SEGUNDA. ACCIONES NEGOCIADAS");
